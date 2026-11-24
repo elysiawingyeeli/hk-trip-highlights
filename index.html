@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hong Kong Trip Highlights</title>
+<meta name="description" content="Photos and videos from our Hong Kong trip — Elyse, Chuck, Jen &amp; Isa, 24–29 November 2026.">
+<meta property="og:title" content="Hong Kong Trip Highlights">
+<meta property="og:description" content="Photos and videos from our Hong Kong trip — Elyse, Chuck, Jen &amp; Isa, 24–29 November 2026.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#0b120c">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛰️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ---- Hong Kong trails: quiet forest greens, mountain ridges, soft light ---- */
+  :root{
+    --void:#070d08; --deep:#0d1510; --panel:#121b13; --panel2:#0f180f;
+    --ink:#f2f5ee; --dim:#a9b8a4; --line:rgba(255,255,255,.14);
+    --gold:#e3c07e; --moss:#8fb573; --leaf:#5f8f5a; --glass:rgba(255,255,255,.04)
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--void);color:var(--ink);font-family:"Space Mono",monospace;min-height:100%}
+  body{overflow-x:hidden}
+
+  /* layered mountain ridges, fixed behind everything, low contrast on purpose */
+  #sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(55% 38% at 18% 0%, rgba(227,192,126,.12), transparent 70%),
+      radial-gradient(45% 32% at 85% 8%, rgba(143,181,115,.10), transparent 70%),
+      linear-gradient(to bottom, rgba(7,13,8,0) 55%, rgba(7,13,8,.55) 100%)}
+  .ridge{position:fixed;left:0;right:0;bottom:0;z-index:0;pointer-events:none}
+  .ridge svg{display:block;width:100%;height:100%}
+  .ridge.far{height:36vh;opacity:.42}
+  .ridge.mid{height:25vh;opacity:.6}
+  .ridge.near{height:14vh;opacity:.85}
+
+  main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 16px 60px}
+
+  /* ---- quiet header ---- */
+  .masthead{padding:30px 4px 6px;text-align:center}
+  .masthead .eyebrow{font-size:10px;letter-spacing:.34em;color:var(--moss);text-transform:uppercase}
+  .masthead h1{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(30px,7vw,52px);line-height:1.02;letter-spacing:-.02em;margin-top:10px}
+  .masthead p{margin-top:10px;color:var(--dim);font-size:13px}
+  .masthead p b{color:var(--gold);font-weight:700}
+
+  .tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin:18px auto;padding:4px;border:1px solid var(--line);border-radius:4px;background:rgba(13,21,16,.88);backdrop-filter:blur(8px);width:100%;max-width:420px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:7}
+  .tabs a{flex:1 1 auto;padding:9px 10px;border-radius:2px;color:var(--dim);text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;text-align:center}
+  .tabs a.on{background:#fff;color:#000;font-weight:700}
+  .tab{display:none}.tab.on{display:block}
+  .lead{display:none}
+
+  .panel{max-width:620px;margin:0 auto 24px;padding:16px;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+  label{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}
+  label:first-child{margin-top:0}
+  input,textarea{width:100%;background:#000;border:1px solid rgba(255,255,255,.22);color:var(--ink);border-radius:2px;padding:12px 14px;font:inherit;font-size:16px;outline:none}
+  textarea{min-height:64px;resize:vertical;font-family:"Archivo",sans-serif;font-size:17px;line-height:1.45;font-weight:500}
+  input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(227,192,126,.25)}
+  .hint{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .btn{display:block;width:100%;margin-top:14px;border:0;cursor:pointer;padding:13px;border-radius:2px;font:700 13px "Space Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#000;background:#fff}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .status{margin-top:12px;font-size:12px;min-height:16px;color:var(--moss);text-align:center}
+  .status.err{color:#ff9aa9}
+
+  .upload{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px;border:1.5px dashed var(--line);border-radius:4px;cursor:pointer;color:#fff;text-align:center;font-size:13px;background:var(--panel2)}
+  .upload b{font-size:24px;line-height:1;color:var(--gold)}
+  .upload input{display:none}
+  .preview{display:none;width:100%;max-height:300px;object-fit:contain;border-radius:4px;margin-top:12px}
+  .filemeta{display:none;font-size:12px;color:var(--dim);margin-top:10px;text-align:center}
+
+  /* tag chips (activity / mood / theme / person) */
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{padding:7px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.22);background:#000;cursor:pointer;font:12px "Space Mono",monospace;color:var(--ink)}
+  .chip[aria-pressed="true"]{border-color:var(--gold);background:rgba(227,192,126,.14);color:var(--gold)}
+  .chip.theme[aria-pressed="true"]{border-color:var(--moss);background:rgba(143,181,115,.14);color:var(--moss)}
+
+  /* filters */
+  .filters{max-width:960px;margin:0 auto 16px;display:grid;gap:10px}
+  .filters .frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .filters .flabel{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);width:64px;flex:none}
+
+  .wallhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
+  .wallhead h2{font-family:"Archivo",sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:-.01em}
+  .ghost{background:transparent;border:1px solid var(--line);color:#fff;padding:9px 16px;border-radius:2px;font:700 12px "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+  .empty{text-align:center;color:var(--dim);padding:44px 20px;border:1px dashed var(--line);border-radius:4px;max-width:960px;margin:0 auto;line-height:1.6}
+
+  /* ---- photo wall ---- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;max-width:960px;margin:0 auto}
+  .ph{position:relative;aspect-ratio:4/3;border-radius:4px;overflow:hidden;border:1px solid var(--line);cursor:pointer;background:var(--deep);animation:land .6s both}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+  .ph:hover img{transform:scale(1.05)}
+  .ph .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.92))}
+  .ph .cap b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+  .ph .cap small{display:block;margin-top:3px;font-size:11px;color:var(--dim);line-height:1.4}
+  .ph .tags{position:absolute;top:10px;left:10px;display:flex;gap:4px;flex-wrap:wrap;max-width:70%}
+  .ph .tags span{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6);padding:4px 7px;border:1px solid rgba(255,255,255,.25);border-radius:2px}
+  .like{position:absolute;right:8px;bottom:8px;z-index:2;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.65);color:#fff;font:700 12px "Space Mono",monospace;cursor:pointer}
+  .like.liked{border-color:#ff8fa3;color:#ff8fa3}
+  .like .heart{font-size:13px;line-height:1}
+  @keyframes land{from{opacity:0;transform:translateY(14px)}}
+
+  /* ---- video wall ---- */
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;max-width:960px;margin:0 auto}
+  .vcard{border-radius:4px;border:1px solid var(--line);background:var(--panel);overflow:hidden;animation:land .6s both}
+  .vcard video{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+  .vcard .vbody{padding:12px 14px 14px}
+  .vcard .vcap{font-family:"Archivo",sans-serif;font-size:16px;font-weight:500;line-height:1.4}
+  .vcard .vmeta{margin-top:6px;font-size:11px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+  .vcard .vrow{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+  .vcard .vtags{display:flex;gap:4px;flex-wrap:wrap}
+  .vcard .vtags span{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:3px 7px;border-radius:2px}
+  .vlike{position:static;display:inline-flex;flex:none}
+
+  /* ---- lightbox + video overlay ---- */
+  .lightbox{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px}
+  .lightbox.on{display:flex}
+  .lightbox img{max-width:100%;max-height:72vh;border-radius:4px}
+  .lightbox p{font-family:"Archivo",sans-serif;font-size:18px;font-weight:500;text-align:center}
+  .lightbox small{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+  .lightbox .lrow{display:flex;gap:10px;align-items:center}
+  .voverlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px}
+  .voverlay.on{display:flex}
+  .voverlay video{max-width:100%;max-height:72vh;border-radius:4px;background:#000}
+  .voverlay p{font-family:"Archivo",sans-serif;font-size:18px;font-weight:500;text-align:center}
+  .voverlay small{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+  .voverlay .lrow{display:flex;gap:10px;align-items:center}
+  .x{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);right:14px;z-index:22;font-size:16px;padding:8px 12px}
+
+  .setup{max-width:620px;margin:0 auto 24px;padding:16px;border-radius:4px;border:1px solid rgba(255,154,169,.35);background:rgba(214,69,107,.1);color:#ffd2d9;font-size:13px;line-height:1.55;display:none}
+
+  /* photo story mode */
+  #ptv{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 70px) 26px calc(env(safe-area-inset-bottom,0px) + 70px);background:rgba(4,8,5,.97);user-select:none;-webkit-user-select:none}
+  body.pstory #ptv{display:flex} body.pstory main{display:none}
+  .bars{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:14px;right:14px;display:flex;gap:4px}
+  .bars span{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
+  .bars span b{display:block;height:100%;width:0;background:#fff}
+  .bars span.done b{width:100%} .bars span.on b{animation:fill 7s linear forwards}
+  @keyframes fill{to{width:100%}}
+  #ptvimg{max-width:100%;max-height:62vh;border-radius:4px;object-fit:contain}
+  #ptvcap{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(20px,5vw,32px);line-height:1.3;max-width:640px;margin-top:22px;word-wrap:break-word}
+  #ptvwho{margin-top:14px;font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
+  #ptvcount{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:0;right:0;font-size:10px;letter-spacing:.3em;color:var(--dim)}
+  #ptvexit{position:fixed;top:calc(env(safe-area-inset-top,0px) + 26px);right:14px;z-index:12;display:none;font-size:16px;padding:6px 12px}
+  body.pstory #ptvexit{display:block}
+  .tap{position:absolute;top:60px;bottom:60px;z-index:1;background:none;border:0;cursor:pointer}
+  .tap.l{left:0;width:35%} .tap.r{right:0;width:65%}
+
+  footer{max-width:1100px;margin:28px auto 0;padding:18px 0 0;border-top:1px solid var(--line);text-align:center;font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+
+  /* phone: keep each screen tight */
+  @media (max-width:520px){
+    .masthead{padding:22px 4px 2px}
+    .masthead h1{font-size:30px}
+    .masthead p{font-size:12px;margin-top:6px}
+    .tabs{margin:12px auto}
+    .tabs a{padding:9px 8px;font-size:10px;letter-spacing:.1em}
+    .panel{margin-bottom:20px;padding:14px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:8px}
+    .vgrid{grid-template-columns:1fr;gap:12px}
+    .empty{padding:28px 16px}
+    .filters .flabel{width:52px}
+    .ridge.far{height:30vh}.ridge.mid{height:20vh}.ridge.near{height:11vh}
+    main{padding-bottom:40px}
+  }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="glow"></div>
+<div class="ridge far" aria-hidden="true"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="#22331f" d="M0,180 L120,140 L260,170 L420,110 L560,160 L720,120 L900,170 L1080,130 L1240,165 L1440,140 L1440,320 L0,320 Z"/></svg></div>
+<div class="ridge mid" aria-hidden="true"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="#182619" d="M0,220 L160,180 L340,215 L520,165 L700,210 L880,175 L1060,220 L1240,185 L1440,215 L1440,320 L0,320 Z"/></svg></div>
+<div class="ridge near" aria-hidden="true"><svg viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="#0f1c11" d="M0,260 L200,225 L420,258 L640,230 L860,262 L1080,235 L1280,260 L1440,240 L1440,320 L0,320 Z"/></svg></div>
+
+<main>
+  <div class="masthead">
+    <div class="eyebrow">Hong Kong · 24–29 November 2026</div>
+    <h1>Hong Kong Trip Highlights</h1>
+    <p>Elyse · Chuck · Jen · Isa — <b>add your photos and videos as the trip unfolds.</b></p>
+  </div>
+  <nav class="tabs">
+    <a href="#photos" data-t="photos">Photos</a>
+    <a href="#videos" data-t="videos">Videos</a>
+  </nav>
+  <div class="setup" id="setup"></div>
+
+  <section id="tab-photos" class="tab">
+    <form class="panel" id="pform" autocomplete="off">
+      <label class="upload" id="pick"><b>＋</b><span id="pickText">Add a photo</span><input type="file" id="file" accept="image/*"></label>
+      <img class="preview" id="preview" alt="">
+      <label for="pname">Your name</label>
+      <input id="pname" maxlength="40" placeholder="Elyse" required>
+      <label for="caption">Caption (optional)</label>
+      <input id="caption" maxlength="120" placeholder="on the trail above the city">
+      <label>Activity</label>
+      <div class="chips" id="pactivity"></div>
+      <label>Mood</label>
+      <div class="chips" id="pmood"></div>
+      <button class="btn" type="submit" id="psend">Upload photo</button>
+      <div class="status" id="pstatus"></div>
+    </form>
+    <div class="filters" id="pfilters">
+      <div class="frow"><span class="flabel">Activity</span><div class="chips" id="f-pactivity"></div></div>
+      <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-pmood"></div></div>
+      <div class="frow"><span class="flabel">Person</span><div class="chips" id="f-pperson"></div></div>
+    </div>
+    <div class="wallhead"><h2>Photos</h2><span id="pcount"></span><a class="ghost" href="#photostories">Play ✦</a></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="pempty">No photos yet — be the first to add one!</div>
+  </section>
+
+  <section id="tab-videos" class="tab">
+    <form class="panel" id="vform" autocomplete="off">
+      <label class="upload" id="vpick"><b>＋</b><span id="vpickText">Add a video</span><input type="file" id="vfile" accept="video/*"></label>
+      <div class="filemeta" id="vmeta"></div>
+      <p class="hint">Short clips work best — max 50 MB per video. Phone clips in MP4 or MOV are fine.</p>
+      <label for="vname">Your name</label>
+      <input id="vname" maxlength="40" placeholder="Elyse" required>
+      <label for="vcaption">Caption (optional)</label>
+      <input id="vcaption" maxlength="120" placeholder="golden hour on the ridge">
+      <label>Theme</label>
+      <div class="chips" id="vtheme"></div>
+      <label>Mood</label>
+      <div class="chips" id="vmood"></div>
+      <label>Activity</label>
+      <div class="chips" id="vactivity"></div>
+      <button class="btn" type="submit" id="vsend">Upload video</button>
+      <div class="status" id="vstatus"></div>
+    </form>
+    <div class="filters" id="vfilters">
+      <div class="frow"><span class="flabel">Theme</span><div class="chips" id="f-vtheme"></div></div>
+      <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-vmood"></div></div>
+      <div class="frow"><span class="flabel">Activity</span><div class="chips" id="f-vactivity"></div></div>
+      <div class="frow"><span class="flabel">Person</span><div class="chips" id="f-vperson"></div></div>
+    </div>
+    <div class="wallhead"><h2>Videos</h2><span id="vcount"></span></div>
+    <div class="vgrid" id="vgrid"></div>
+    <div class="empty" id="vempty">No videos yet — be the first to add one!</div>
+  </section>
+
+  <footer><span>Hong Kong Trip Highlights · 24–29 Nov 2026</span></footer>
+</main>
+
+<div class="lightbox" id="lightbox">
+  <img id="lbimg" alt="">
+  <p id="lbcap"></p>
+  <small id="lbwho"></small>
+  <div class="lrow"><button class="like vlike" id="lblike"><span class="heart">♥</span><span class="n">0</span></button></div>
+</div>
+
+<div class="voverlay" id="voverlay">
+  <video id="vovideo" controls playsinline></video>
+  <p id="vocap"></p>
+  <small id="vowho"></small>
+  <div class="lrow"><button class="like vlike" id="volike"><span class="heart">♥</span><span class="n">0</span></button></div>
+</div>
+<a class="ghost x" id="lbclose" href="#" aria-label="Close" style="display:none">✕</a>
+
+<div id="ptv">
+  <div class="bars" id="pbars"></div>
+  <button class="tap l" id="pprev" aria-label="Previous"></button>
+  <button class="tap r" id="pnext" aria-label="Next"></button>
+  <img id="ptvimg" alt="">
+  <div id="ptvcap">No photos yet.</div><div id="ptvwho"></div><div id="ptvcount"></div>
+</div>
+<a class="ghost" id="ptvexit" href="#" aria-label="Close">✕</a>
+
+<script src="config.js"></script>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const $ = id => document.getElementById(id);
+const ACTIVITIES = ["Eating", "Exploring", "Nightlife", "Views", "On the move"];
+const MOODS = ["Chill", "Electric", "Golden", "Playful"];
+const THEMES = ["Golden Hour", "City Lights", "Foodie", "Late Night", "Chill", "Adventure"];
+const PHOTO_BUCKET = "trip-photos";
+const VIDEO_BUCKET = "trip-videos";
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+
+let photos = [], videos = [];
+let likeCounts = {};            // "photo:12" -> n
+let liked = new Set();          // local "photo:12" keys this browser has liked
+try { liked = new Set(JSON.parse(localStorage.getItem("hk-liked") || "[]")); } catch (e) {}
+
+/* filters: one shared set, applied per tab (theme only affects videos) */
+const filters = { activity: "All", mood: "All", theme: "All", person: "All" };
+let formActivity = ACTIVITIES[0], formMood = MOODS[0];
+let formTheme = THEMES[0], vFormMood = MOODS[0], vFormActivity = ACTIVITIES[0];
+
+/* ---- drifting light motes over the ridges: slow, faint, forest-firefly feel ---- */
+(() => {
+  const cv = $("sky"), cx = cv.getContext("2d");
+  const d = devicePixelRatio || 1;
+  let W, H, motes = [];
+  function size() {
+    W = cv.width = innerWidth * d; H = cv.height = innerHeight * d;
+    cv.style.width = innerWidth + "px"; cv.style.height = innerHeight + "px";
+    const n = Math.min(60, Math.floor(innerWidth * innerHeight / 30000));
+    motes = Array.from({ length: n }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: (Math.random() * 1.4 + .4) * d,
+      t: Math.random() * 6.28, s: Math.random() * .006 + .002,
+      vy: (Math.random() * .12 + .03) * d,
+      gold: Math.random() < .4
+    }));
+  }
+  function frame() {
+    cx.clearRect(0, 0, W, H);
+    for (const m of motes) {
+      m.t += m.s; m.y -= m.vy; m.x += Math.sin(m.t) * .15 * d;
+      if (m.y < -4) { m.y = H + 4; m.x = Math.random() * W; }
+      const a = .12 + .28 * Math.abs(Math.sin(m.t));
+      cx.fillStyle = m.gold ? `rgba(227,192,126,${a})` : `rgba(143,181,115,${a})`;
+      cx.beginPath(); cx.arc(m.x, m.y, m.r, 0, 6.28); cx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener("resize", size); size(); frame();
+})();
+
+/* ---- contributor name, remembered on this device ---- */
+function setName(v) {
+  $("pname").value = v; $("vname").value = v;
+  try { localStorage.setItem("hk-name", v); } catch (e) {}
+}
+["pname", "vname"].forEach(id => $(id).addEventListener("change", e => setName(e.target.value.trim())));
+try { const n = localStorage.getItem("hk-name"); if (n) setName(n); } catch (e) {}
+
+function status(id, t, err) { const s = $(id); s.textContent = t; s.className = "status" + (err ? " err" : ""); }
+
+/* ---- chip groups ---- */
+function buildChips(box, values, current, onPick, extraClass) {
+  box.innerHTML = "";
+  ["All", ...values].forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip" + (extraClass ? " " + extraClass : "");
+    b.textContent = v; b.setAttribute("aria-pressed", v === current ? "true" : "false");
+    b.onclick = () => onPick(v);
+    box.append(b);
+  });
+}
+function buildPickChips(box, values, current, onPick, extraClass) {
+  box.innerHTML = "";
+  values.forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip" + (extraClass ? " " + extraClass : "");
+    b.textContent = v; b.setAttribute("aria-pressed", v === current ? "true" : "false");
+    b.onclick = () => onPick(v);
+    box.append(b);
+  });
+}
+function refreshFilterChips() {
+  buildChips($("f-pactivity"), ACTIVITIES, filters.activity, v => { filters.activity = v; refreshFilterChips(); renderPhotos(); });
+  buildChips($("f-pmood"), MOODS, filters.mood, v => { filters.mood = v; refreshFilterChips(); renderPhotos(); });
+  buildChips($("f-vtheme"), THEMES, filters.theme, v => { filters.theme = v; refreshFilterChips(); renderVideos(); }, "theme");
+  buildChips($("f-vmood"), MOODS, filters.mood, v => { filters.mood = v; refreshFilterChips(); renderVideos(); });
+  buildChips($("f-vactivity"), ACTIVITIES, filters.activity, v => { filters.activity = v; refreshFilterChips(); renderVideos(); });
+  const people = [...new Set([...photos.map(p => p.contributor), ...videos.map(v => v.contributor)].filter(Boolean))].sort();
+  buildChips($("f-pperson"), people, filters.person, v => { filters.person = v; refreshFilterChips(); renderPhotos(); renderVideos(); });
+  buildChips($("f-vperson"), people, filters.person, v => { filters.person = v; refreshFilterChips(); renderPhotos(); renderVideos(); });
+}
+function refreshFormChips() {
+  buildPickChips($("pactivity"), ACTIVITIES, formActivity, v => { formActivity = v; refreshFormChips(); });
+  buildPickChips($("pmood"), MOODS, formMood, v => { formMood = v; refreshFormChips(); });
+  buildPickChips($("vtheme"), THEMES, formTheme, v => { formTheme = v; refreshFormChips(); }, "theme");
+  buildPickChips($("vmood"), MOODS, vFormMood, v => { vFormMood = v; refreshFormChips(); });
+  buildPickChips($("vactivity"), ACTIVITIES, vFormActivity, v => { vFormActivity = v; refreshFormChips(); });
+}
+refreshFilterChips();
+refreshFormChips();
+
+/* ---- tabs ---- */
+function route() {
+  const h = location.hash.slice(1);
+  const wasPStory = document.body.classList.contains("pstory");
+  document.body.classList.toggle("pstory", h === "photostories");
+  if (h === "photostories") { if (!wasPStory) startPhotoStory(); return; }
+  stopPhotoStory();
+  const t = h === "videos" ? "videos" : "photos";
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x.id === "tab-" + t));
+  document.querySelectorAll(".tabs a").forEach(x => x.classList.toggle("on", x.dataset.t === t));
+}
+addEventListener("hashchange", route);
+
+/* ---- likes ---- */
+function likeKey(type, id) { return type + ":" + id; }
+function likeCount(type, id) { return likeCounts[likeKey(type, id)] || 0; }
+function saveLiked() { try { localStorage.setItem("hk-liked", JSON.stringify([...liked])); } catch (e) {} }
+async function toggleLike(type, id, btn) {
+  const key = likeKey(type, id);
+  if (liked.has(key) || !sb) return;
+  liked.add(key); saveLiked();
+  likeCounts[key] = (likeCounts[key] || 0) + 1;
+  paintLikeBtn(btn, type, id);
+  const { error } = await sb.from("likes").insert({ item_type: type, item_id: id });
+  if (error) { liked.delete(key); saveLiked(); likeCounts[key]--; paintLikeBtn(btn, type, id); }
+}
+function paintLikeBtn(btn, type, id) {
+  if (!btn) return;
+  const key = likeKey(type, id);
+  btn.classList.toggle("liked", liked.has(key));
+  const n = btn.querySelector(".n");
+  if (n) n.textContent = likeCount(type, id);
+}
+function likeButton(type, id) {
+  const b = document.createElement("button");
+  b.className = "like"; b.type = "button";
+  b.innerHTML = '<span class="heart">♥</span><span class="n">0</span>';
+  paintLikeBtn(b, type, id);
+  b.onclick = e => { e.stopPropagation(); toggleLike(type, id, b); };
+  return b;
+}
+function visiblePhotos() {
+  return photos.filter(p =>
+    (filters.activity === "All" || p.activity === filters.activity) &&
+    (filters.mood === "All" || p.mood === filters.mood) &&
+    (filters.person === "All" || p.contributor === filters.person));
+}
+function visibleVideos() {
+  return videos.filter(v =>
+    (filters.theme === "All" || v.theme === filters.theme) &&
+    (filters.mood === "All" || v.mood === filters.mood) &&
+    (filters.activity === "All" || v.activity === filters.activity) &&
+    (filters.person === "All" || v.contributor === filters.person));
+}
+
+/* ---- render: photos ---- */
+function renderPhotos() {
+  const list = visiblePhotos();
+  const g = $("grid"); g.innerHTML = "";
+  $("pempty").style.display = list.length ? "none" : "block";
+  $("pempty").textContent = photos.length
+    ? "Nothing matches those filters — try clearing one."
+    : "No photos yet — be the first to add one!";
+  $("pcount").textContent = photos.length ? photos.length + (photos.length === 1 ? " photo" : " photos") : "";
+  list.forEach(p => {
+    const d = document.createElement("div");
+    d.className = "ph";
+    const im = document.createElement("img");
+    im.loading = "lazy"; im.src = p.url; im.alt = p.caption || "";
+    const tags = document.createElement("div");
+    tags.className = "tags";
+    [p.activity, p.mood].filter(Boolean).forEach(t => {
+      const s = document.createElement("span"); s.textContent = t; tags.append(s);
+    });
+    const cap = document.createElement("div");
+    cap.className = "cap";
+    const b = document.createElement("b"); b.textContent = p.contributor;
+    const s = document.createElement("small"); s.textContent = p.caption || "No caption.";
+    cap.append(b, s);
+    const like = likeButton("photo", p.id);
+    d.append(im, tags, cap, like);
+    d.onclick = () => openLightbox(p);
+    g.append(d);
+  });
+}
+
+/* ---- render: videos ---- */
+function renderVideos() {
+  const list = visibleVideos();
+  const g = $("vgrid"); g.innerHTML = "";
+  $("vempty").style.display = list.length ? "none" : "block";
+  $("vempty").textContent = videos.length
+    ? "Nothing matches those filters — try clearing one."
+    : "No videos yet — be the first to add one!";
+  $("vcount").textContent = videos.length ? videos.length + (videos.length === 1 ? " video" : " videos") : "";
+  list.forEach(v => {
+    const card = document.createElement("div");
+    card.className = "vcard";
+    const vid = document.createElement("video");
+    vid.controls = true; vid.playsInline = true; vid.preload = "metadata";
+    vid.src = v.url;
+    const bd = document.createElement("div");
+    bd.className = "vbody";
+    const cap = document.createElement("div");
+    cap.className = "vcap"; cap.textContent = v.caption || "No caption.";
+    const meta = document.createElement("div");
+    meta.className = "vmeta"; meta.textContent = v.contributor;
+    const row = document.createElement("div");
+    row.className = "vrow";
+    const tags = document.createElement("div");
+    tags.className = "vtags";
+    [v.theme, v.mood, v.activity].filter(Boolean).forEach(t => {
+      const s = document.createElement("span"); s.textContent = t; tags.append(s);
+    });
+    const like = likeButton("video", v.id);
+    like.classList.add("vlike");
+    const big = document.createElement("button");
+    big.className = "ghost"; big.type = "button"; big.textContent = "Watch big";
+    big.onclick = () => openVideo(v);
+    row.append(tags, like);
+    bd.append(cap, meta, row, big);
+    card.append(vid, bd);
+    g.append(card);
+  });
+}
+
+/* ---- photo lightbox ---- */
+let lbPhoto = null;
+function openLightbox(p) {
+  lbPhoto = p;
+  $("lbimg").src = p.url;
+  $("lbcap").textContent = p.caption || "";
+  $("lbwho").textContent = p.contributor + (p.activity ? " · " + p.activity : "") + (p.mood ? " · " + p.mood : "");
+  paintLikeBtn($("lblike"), "photo", p.id);
+  $("lblike").onclick = () => toggleLike("photo", p.id, $("lblike"));
+  $("lightbox").classList.add("on");
+  $("lbclose").style.display = "block";
+}
+function closeLightbox() {
+  $("lightbox").classList.remove("on");
+  $("lbclose").style.display = "none";
+  lbPhoto = null;
+}
+$("lightbox").addEventListener("click", e => { if (e.target === $("lightbox") || e.target === $("lbimg")) closeLightbox(); });
+$("lbclose").onclick = e => { e.preventDefault(); closeLightbox(); closeVideo(); };
+
+/* ---- video fullscreen overlay ---- */
+let voVideo = null;
+function openVideo(v) {
+  voVideo = v;
+  const el = $("vovideo");
+  el.src = v.url;
+  $("vocap").textContent = v.caption || "";
+  $("vowho").textContent = v.contributor + (v.theme ? " · " + v.theme : "") + (v.mood ? " · " + v.mood : "");
+  paintLikeBtn($("volike"), "video", v.id);
+  $("volike").onclick = () => toggleLike("video", v.id, $("volike"));
+  $("voverlay").classList.add("on");
+  $("lbclose").style.display = "block";
+  el.play().catch(() => {});
+}
+function closeVideo() {
+  const el = $("vovideo");
+  el.pause(); el.removeAttribute("src"); el.load();
+  $("voverlay").classList.remove("on");
+  $("lbclose").style.display = "none";
+  voVideo = null;
+}
+$("voverlay").addEventListener("click", e => { if (e.target === $("voverlay")) closeVideo(); });
+addEventListener("keydown", e => { if (e.key === "Escape") { closeLightbox(); closeVideo(); } });
+
+/* ---- photo story mode ---- */
+let psi = 0, ptimer = null, pstory = [];
+function showPhotoStory() {
+  clearTimeout(ptimer);
+  if (!pstory.length) {
+    $("ptvimg").style.display = "none";
+    $("ptvcap").textContent = "No photos yet — be the first to upload one.";
+    $("ptvwho").textContent = ""; $("pbars").innerHTML = ""; $("ptvcount").textContent = "";
+    ptimer = setTimeout(showPhotoStory, 5000); return;
+  }
+  if (pstory.length !== photos.length) {
+    const cur = pstory[psi];
+    pstory = photos.slice();
+    psi = Math.max(0, pstory.indexOf(cur));
+  }
+  psi = (psi + pstory.length) % pstory.length;
+  const p = pstory[psi];
+  $("pbars").innerHTML = pstory.map((_, i) => `<span class="${i < psi ? "done" : i === psi ? "on" : ""}"><b></b></span>`).join("");
+  const im = $("ptvimg");
+  im.style.display = "block"; im.src = p.url; im.alt = p.caption || "";
+  $("ptvcap").textContent = p.caption || "";
+  $("ptvwho").textContent = p.contributor;
+  $("ptvcount").textContent = `${psi + 1} / ${pstory.length}`;
+  ptimer = setTimeout(() => { psi++; showPhotoStory(); }, 7000);
+}
+function startPhotoStory() { pstory = photos.slice(); psi = 0; showPhotoStory(); }
+function stopPhotoStory() { clearTimeout(ptimer); pstory = []; }
+$("pnext").onclick = () => { psi++; showPhotoStory(); };
+$("pprev").onclick = () => { psi--; showPhotoStory(); };
+let psx = null;
+$("ptv").addEventListener("touchstart", e => { psx = e.touches[0].clientX; }, { passive: true });
+$("ptv").addEventListener("touchend", e => {
+  if (psx == null) return;
+  const dx = e.changedTouches[0].clientX - psx; psx = null;
+  if (Math.abs(dx) > 50) { psi += dx < 0 ? 1 : -1; showPhotoStory(); }
+});
+
+/* ---------- Supabase ---------- */
+const cfg = window.HK_CONFIG || {};
+const ready = cfg.supabaseUrl && cfg.supabaseKey && !cfg.supabaseUrl.startsWith("PASTE") && !cfg.supabaseKey.startsWith("PASTE");
+if (!ready) {
+  $("setup").style.display = "block";
+  $("setup").textContent = "Almost there: add your Supabase URL and publishable key to config.js (see README.md).";
+}
+const sb = ready ? createClient(cfg.supabaseUrl, cfg.supabaseKey) : null;
+
+async function loadPhotos() {
+  const { data, error } = await sb.from("photos").select("id,contributor,caption,activity,mood,path,created_at").order("created_at", { ascending: false }).limit(300);
+  if (!error) {
+    photos = data.map(p => ({ ...p, url: sb.storage.from(PHOTO_BUCKET).getPublicUrl(p.path).data.publicUrl }));
+    refreshFilterChips(); renderPhotos();
+  }
+}
+async function loadVideos() {
+  const { data, error } = await sb.from("videos").select("id,contributor,caption,theme,mood,activity,path,created_at").order("created_at", { ascending: false }).limit(200);
+  if (!error) {
+    videos = data.map(v => ({ ...v, url: sb.storage.from(VIDEO_BUCKET).getPublicUrl(v.path).data.publicUrl }));
+    refreshFilterChips(); renderVideos();
+  }
+}
+async function loadLikes() {
+  const { data, error } = await sb.from("likes").select("item_type,item_id");
+  if (!error) {
+    likeCounts = {};
+    data.forEach(l => { const k = likeKey(l.item_type, l.item_id); likeCounts[k] = (likeCounts[k] || 0) + 1; });
+    renderPhotos(); renderVideos();
+    if (lbPhoto) paintLikeBtn($("lblike"), "photo", lbPhoto.id);
+    if (voVideo) paintLikeBtn($("volike"), "video", voVideo.id);
+  }
+}
+
+if (sb) {
+  loadPhotos(); loadVideos(); loadLikes();
+  sb.channel("hk-trip")
+    .on("postgres_changes", { event: "*", schema: "public", table: "photos" }, loadPhotos)
+    .on("postgres_changes", { event: "*", schema: "public", table: "videos" }, loadVideos)
+    .on("postgres_changes", { event: "*", schema: "public", table: "likes" }, loadLikes)
+    .subscribe();
+  setInterval(() => { if (!document.hidden) { loadPhotos(); loadVideos(); } }, 30000); // backup if live updates drop
+}
+
+renderPhotos(); renderVideos(); route();
+
+/* ---- photo upload (shrinks big phone photos first) ---- */
+let picked = null;
+$("file").addEventListener("change", () => {
+  picked = $("file").files[0] || null;
+  if (picked) { $("preview").src = URL.createObjectURL(picked); $("preview").style.display = "block"; $("pickText").textContent = "Change photo"; }
+});
+async function shrink(file) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const s = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas");
+    c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const b = await new Promise(r => c.toBlob(r, "image/jpeg", .82));
+    return b ? { blob: b, ext: "jpg", type: "image/jpeg" } : null;
+  } catch (e) { return null; }
+}
+$("pform").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!sb) return status("pstatus", "Site isn't connected yet.", true);
+  const name = $("pname").value.trim();
+  if (!picked) return status("pstatus", "Pick a photo first.", true);
+  if (!name) return status("pstatus", "Add your name.", true);
+  setName(name); $("psend").disabled = true; status("pstatus", "Uploading…");
+  try {
+    const small = await shrink(picked);
+    const body = small ? small.blob : picked;
+    const ext = small ? small.ext : ((picked.name.split(".").pop() || "jpg").toLowerCase());
+    const type = small ? small.type : picked.type;
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const up = await sb.storage.from(PHOTO_BUCKET).upload(path, body, { contentType: type, upsert: false });
+    if (up.error) throw up.error;
+    const { error } = await sb.from("photos").insert({ contributor: name, caption: $("caption").value.trim() || null, activity: formActivity, mood: formMood, path });
+    if (error) throw error;
+    picked = null; $("file").value = ""; $("caption").value = "";
+    $("preview").style.display = "none"; $("pickText").textContent = "Add a photo";
+    status("pstatus", "Uploaded — it's on the wall.");
+    loadPhotos();
+  } catch (err) { status("pstatus", "Upload failed. Try again.", true); }
+  finally { $("psend").disabled = false; }
+});
+
+/* ---- video upload ---- */
+let vpicked = null;
+$("vfile").addEventListener("change", () => {
+  vpicked = $("vfile").files[0] || null;
+  if (vpicked) {
+    $("vpickText").textContent = "Change video";
+    $("vmeta").style.display = "block";
+    $("vmeta").textContent = vpicked.name + " · " + (vpicked.size / 1048576).toFixed(1) + " MB";
+  }
+});
+$("vform").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!sb) return status("vstatus", "Site isn't connected yet.", true);
+  const name = $("vname").value.trim();
+  if (!vpicked) return status("vstatus", "Pick a video first.", true);
+  if (!name) return status("vstatus", "Add your name.", true);
+  if (vpicked.size > MAX_VIDEO_BYTES) return status("vstatus", "That video is over 50 MB — trim it or pick a shorter clip.", true);
+  setName(name); $("vsend").disabled = true; status("vstatus", "Uploading… this can take a bit for big clips.");
+  try {
+    const ext = (vpicked.name.split(".").pop() || "mp4").toLowerCase();
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const up = await sb.storage.from(VIDEO_BUCKET).upload(path, vpicked, { contentType: vpicked.type || "video/mp4", upsert: false });
+    if (up.error) throw up.error;
+    const { error } = await sb.from("videos").insert({ contributor: name, caption: $("vcaption").value.trim() || null, theme: formTheme, mood: vFormMood, activity: vFormActivity, path });
+    if (error) throw error;
+    vpicked = null; $("vfile").value = ""; $("vcaption").value = "";
+    $("vmeta").style.display = "none"; $("vpickText").textContent = "Add a video";
+    status("vstatus", "Uploaded — it's in the video wall.");
+    loadVideos();
+  } catch (err) { status("vstatus", "Upload failed. Try again.", true); }
+  finally { $("vsend").disabled = false; }
+});
+</script>
+</body>
+</html>
