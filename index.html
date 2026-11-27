@@ -185,22 +185,26 @@
   </nav>
   <div class="setup" id="setup"></div>
 
+  <form class="panel" id="uform" autocomplete="off">
+    <label class="upload" id="upick"><b>＋</b><span id="upickText">Add photos &amp; videos</span><input type="file" id="ufile" accept="image/*,video/*" multiple></label>
+    <p class="hint">Pick up to 50 files at once — photos and videos mixed. They'll all upload with the same name, activity and mood. Videos also get the theme below, and must be under 50 MB each.</p>
+    <img class="preview" id="upreview" alt="">
+    <div class="filemeta" id="umeta"></div>
+    <label for="uname">Your name</label>
+    <input id="uname" maxlength="40" placeholder="Elyse" required>
+    <label for="ucap">Caption (optional)</label>
+    <input id="ucap" maxlength="120" placeholder="on the trail above the city">
+    <label>Activity</label>
+    <div class="chips" id="uactivity"></div>
+    <label>Mood</label>
+    <div class="chips" id="umood"></div>
+    <label>Theme <small>(for videos)</small></label>
+    <div class="chips" id="utheme"></div>
+    <button class="btn" type="submit" id="usend">Upload</button>
+    <div class="status" id="ustatus"></div>
+  </form>
+
   <section id="tab-photos" class="tab">
-    <form class="panel" id="pform" autocomplete="off">
-      <label class="upload" id="pick"><b>＋</b><span id="pickText">Add photos</span><input type="file" id="file" accept="image/*" multiple></label>
-      <p class="hint">Pick up to 50 photos at once — they'll all upload with the same name, activity and mood. A caption, if you add one, applies to all of them.</p>
-      <img class="preview" id="preview" alt="">
-      <label for="pname">Your name</label>
-      <input id="pname" maxlength="40" placeholder="Elyse" required>
-      <label for="caption">Caption (optional)</label>
-      <input id="caption" maxlength="120" placeholder="on the trail above the city">
-      <label>Activity</label>
-      <div class="chips" id="pactivity"></div>
-      <label>Mood</label>
-      <div class="chips" id="pmood"></div>
-      <button class="btn" type="submit" id="psend">Upload photo</button>
-      <div class="status" id="pstatus"></div>
-    </form>
     <div class="filters" id="pfilters">
       <div class="frow"><span class="flabel">Activity</span><div class="chips" id="f-pactivity"></div></div>
       <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-pmood"></div></div>
@@ -212,23 +216,6 @@
   </section>
 
   <section id="tab-videos" class="tab">
-    <form class="panel" id="vform" autocomplete="off">
-      <label class="upload" id="vpick"><b>＋</b><span id="vpickText">Add a video</span><input type="file" id="vfile" accept="video/*"></label>
-      <div class="filemeta" id="vmeta"></div>
-      <p class="hint">Short clips work best — max 50 MB per video. Phone clips in MP4 or MOV are fine.</p>
-      <label for="vname">Your name</label>
-      <input id="vname" maxlength="40" placeholder="Elyse" required>
-      <label for="vcaption">Caption (optional)</label>
-      <input id="vcaption" maxlength="120" placeholder="golden hour on the ridge">
-      <label>Theme</label>
-      <div class="chips" id="vtheme"></div>
-      <label>Mood</label>
-      <div class="chips" id="vmood"></div>
-      <label>Activity</label>
-      <div class="chips" id="vactivity"></div>
-      <button class="btn" type="submit" id="vsend">Upload video</button>
-      <div class="status" id="vstatus"></div>
-    </form>
     <div class="filters" id="vfilters">
       <div class="frow"><span class="flabel">Theme</span><div class="chips" id="f-vtheme"></div></div>
       <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-vmood"></div></div>
@@ -286,8 +273,7 @@ try { liked = new Set(JSON.parse(localStorage.getItem("hk-liked") || "[]")); } c
 
 /* filters: one shared set, applied per tab (theme only affects videos) */
 const filters = { activity: "All", mood: "All", theme: "All", person: "All" };
-let formActivity = ACTIVITIES[0], formMood = MOODS[0];
-let formTheme = THEMES[0], vFormMood = MOODS[0], vFormActivity = ACTIVITIES[0];
+let formActivity = ACTIVITIES[0], formMood = MOODS[0], formTheme = THEMES[0];
 
 /* ---- drifting light motes over the ridges: slow, faint, forest-firefly feel ---- */
 (() => {
@@ -322,10 +308,10 @@ let formTheme = THEMES[0], vFormMood = MOODS[0], vFormActivity = ACTIVITIES[0];
 
 /* ---- contributor name, remembered on this device ---- */
 function setName(v) {
-  $("pname").value = v; $("vname").value = v;
+  $("uname").value = v;
   try { localStorage.setItem("hk-name", v); } catch (e) {}
 }
-["pname", "vname"].forEach(id => $(id).addEventListener("change", e => setName(e.target.value.trim())));
+$("uname").addEventListener("change", e => setName(e.target.value.trim()));
 try { const n = localStorage.getItem("hk-name"); if (n) setName(n); } catch (e) {}
 
 function status(id, t, err) { const s = $(id); s.textContent = t; s.className = "status" + (err ? " err" : ""); }
@@ -362,11 +348,9 @@ function refreshFilterChips() {
   buildChips($("f-vperson"), people, filters.person, v => { filters.person = v; refreshFilterChips(); renderPhotos(); renderVideos(); });
 }
 function refreshFormChips() {
-  buildPickChips($("pactivity"), ACTIVITIES, formActivity, v => { formActivity = v; refreshFormChips(); });
-  buildPickChips($("pmood"), MOODS, formMood, v => { formMood = v; refreshFormChips(); });
-  buildPickChips($("vtheme"), THEMES, formTheme, v => { formTheme = v; refreshFormChips(); }, "theme");
-  buildPickChips($("vmood"), MOODS, vFormMood, v => { vFormMood = v; refreshFormChips(); });
-  buildPickChips($("vactivity"), ACTIVITIES, vFormActivity, v => { vFormActivity = v; refreshFormChips(); });
+  buildPickChips($("uactivity"), ACTIVITIES, formActivity, v => { formActivity = v; refreshFormChips(); });
+  buildPickChips($("umood"), MOODS, formMood, v => { formMood = v; refreshFormChips(); });
+  buildPickChips($("utheme"), THEMES, formTheme, v => { formTheme = v; refreshFormChips(); }, "theme");
 }
 refreshFilterChips();
 refreshFormChips();
@@ -624,16 +608,36 @@ if (sb) {
 
 renderPhotos(); renderVideos(); route();
 
-/* ---- photo upload (shrinks big phone photos first) ---- */
+/* ---- unified upload: up to 50 photos & videos, mixed (shrinks big phone photos first) ---- */
 let picked = [];
-$("file").addEventListener("change", () => {
-  const files = Array.from($("file").files || []);
+function kindOf(file) {
+  const t = (file.type || "").toLowerCase();
+  if (t.startsWith("image/")) return "image";
+  if (t.startsWith("video/")) return "video";
+  const ext = (file.name.split(".").pop() || "").toLowerCase();
+  if (["jpg", "jpeg", "png", "heic", "heif", "webp", "gif", "bmp"].includes(ext)) return "image";
+  if (["mp4", "mov", "m4v", "3gp", "3gpp", "webm", "mkv"].includes(ext)) return "video";
+  return null;
+}
+$("ufile").addEventListener("change", () => {
+  const files = Array.from($("ufile").files || []);
   picked = files.slice(0, 50);
+  const firstImg = picked.find(f => kindOf(f) === "image");
+  if (firstImg) { $("upreview").src = URL.createObjectURL(firstImg); $("upreview").style.display = "block"; }
+  else $("upreview").style.display = "none";
   if (picked.length) {
-    $("preview").src = URL.createObjectURL(picked[0]); $("preview").style.display = "block";
-    $("pickText").textContent = picked.length === 1 ? "Change photo" : picked.length + " photos picked — tap to change";
-    $("psend").textContent = picked.length === 1 ? "Upload photo" : "Upload " + picked.length + " photos";
-    if (files.length > 50) status("pstatus", "Picked the first 50 of " + files.length + " — upload in batches of 50.");
+    const imgs = picked.filter(f => kindOf(f) === "image").length;
+    const vids = picked.filter(f => kindOf(f) === "video").length;
+    const parts = [];
+    if (imgs) parts.push(imgs + (imgs === 1 ? " photo" : " photos"));
+    if (vids) parts.push(vids + (vids === 1 ? " video" : " videos"));
+    const other = picked.length - imgs - vids;
+    if (other) parts.push(other + " other file" + (other === 1 ? "" : "s"));
+    $("umeta").style.display = "block";
+    $("umeta").textContent = parts.join(" · ");
+    $("upickText").textContent = "Change files";
+    $("usend").textContent = picked.length === 1 ? "Upload 1 file" : "Upload " + picked.length + " files";
+    if (files.length > 50) status("ustatus", "Picked the first 50 of " + files.length + " — upload in batches of 50.");
   }
 });
 async function shrink(file) {
@@ -647,72 +651,52 @@ async function shrink(file) {
     return b ? { blob: b, ext: "jpg", type: "image/jpeg" } : null;
   } catch (e) { return null; }
 }
-$("pform").addEventListener("submit", async e => {
+$("uform").addEventListener("submit", async e => {
   e.preventDefault();
-  if (!sb) return status("pstatus", "Site isn't connected yet.", true);
-  const name = $("pname").value.trim();
-  if (!picked.length) return status("pstatus", "Pick a photo first.", true);
-  if (!name) return status("pstatus", "Add your name.", true);
-  const caption = $("caption").value.trim() || null;
+  if (!sb) return status("ustatus", "Site isn't connected yet.", true);
+  const name = $("uname").value.trim();
+  if (!picked.length) return status("ustatus", "Pick some photos or videos first.", true);
+  if (!name) return status("ustatus", "Add your name.", true);
+  const caption = $("ucap").value.trim() || null;
   const total = picked.length;
-  setName(name); $("psend").disabled = true;
+  setName(name); $("usend").disabled = true;
   let done = 0, failed = 0;
   try {
     for (const file of picked) {
-      status("pstatus", "Uploading " + (done + failed + 1) + " of " + total + "…");
+      status("ustatus", "Uploading " + (done + failed + 1) + " of " + total + "…");
       try {
-        const small = await shrink(file);
-        const body = small ? small.blob : file;
-        const ext = small ? small.ext : ((file.name.split(".").pop() || "jpg").toLowerCase());
-        const type = small ? small.type : file.type;
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-        const up = await sb.storage.from(PHOTO_BUCKET).upload(path, body, { contentType: type, upsert: false });
-        if (up.error) throw up.error;
-        const { error } = await sb.from("photos").insert({ contributor: name, caption, activity: formActivity, mood: formMood, path });
-        if (error) throw error;
+        const kind = kindOf(file);
+        if (kind === "image") {
+          const small = await shrink(file);
+          const body = small ? small.blob : file;
+          const ext = small ? small.ext : ((file.name.split(".").pop() || "jpg").toLowerCase());
+          const type = small ? small.type : file.type;
+          const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+          const up = await sb.storage.from(PHOTO_BUCKET).upload(path, body, { contentType: type, upsert: false });
+          if (up.error) throw up.error;
+          const { error } = await sb.from("photos").insert({ contributor: name, caption, activity: formActivity, mood: formMood, path });
+          if (error) throw error;
+        } else if (kind === "video") {
+          if (file.size > MAX_VIDEO_BYTES) throw new Error("too big");
+          const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
+          const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+          const up = await sb.storage.from(VIDEO_BUCKET).upload(path, file, { contentType: file.type || "video/mp4", upsert: false });
+          if (up.error) throw up.error;
+          const { error } = await sb.from("videos").insert({ contributor: name, caption, theme: formTheme, mood: formMood, activity: formActivity, path });
+          if (error) throw error;
+        } else throw new Error("not a photo or video");
         done++;
       } catch (err) { failed++; }
     }
-    picked = []; $("file").value = ""; $("caption").value = "";
-    $("preview").style.display = "none"; $("pickText").textContent = "Add photos"; $("psend").textContent = "Upload photo";
-    if (failed === 0) status("pstatus", done === 1 ? "Uploaded — it's on the wall." : "Uploaded " + done + " photos — they're on the wall.");
-    else status("pstatus", "Uploaded " + done + " of " + total + " — " + failed + " failed. Try those again.", true);
-    loadPhotos();
-  } finally { $("psend").disabled = false; }
+    picked = []; $("ufile").value = ""; $("ucap").value = "";
+    $("upreview").style.display = "none"; $("umeta").style.display = "none";
+    $("upickText").textContent = "Add photos & videos"; $("usend").textContent = "Upload";
+    if (failed === 0) status("ustatus", done === 1 ? "Uploaded — it's on the wall." : "Uploaded " + done + " files — they're on the walls.");
+    else status("ustatus", "Uploaded " + done + " of " + total + " — " + failed + " failed. Try those again.", true);
+    loadPhotos(); loadVideos();
+  } finally { $("usend").disabled = false; }
 });
 
-/* ---- video upload ---- */
-let vpicked = null;
-$("vfile").addEventListener("change", () => {
-  vpicked = $("vfile").files[0] || null;
-  if (vpicked) {
-    $("vpickText").textContent = "Change video";
-    $("vmeta").style.display = "block";
-    $("vmeta").textContent = vpicked.name + " · " + (vpicked.size / 1048576).toFixed(1) + " MB";
-  }
-});
-$("vform").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!sb) return status("vstatus", "Site isn't connected yet.", true);
-  const name = $("vname").value.trim();
-  if (!vpicked) return status("vstatus", "Pick a video first.", true);
-  if (!name) return status("vstatus", "Add your name.", true);
-  if (vpicked.size > MAX_VIDEO_BYTES) return status("vstatus", "That video is over 50 MB — trim it or pick a shorter clip.", true);
-  setName(name); $("vsend").disabled = true; status("vstatus", "Uploading… this can take a bit for big clips.");
-  try {
-    const ext = (vpicked.name.split(".").pop() || "mp4").toLowerCase();
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const up = await sb.storage.from(VIDEO_BUCKET).upload(path, vpicked, { contentType: vpicked.type || "video/mp4", upsert: false });
-    if (up.error) throw up.error;
-    const { error } = await sb.from("videos").insert({ contributor: name, caption: $("vcaption").value.trim() || null, theme: formTheme, mood: vFormMood, activity: vFormActivity, path });
-    if (error) throw error;
-    vpicked = null; $("vfile").value = ""; $("vcaption").value = "";
-    $("vmeta").style.display = "none"; $("vpickText").textContent = "Add a video";
-    status("vstatus", "Uploaded — it's in the video wall.");
-    loadVideos();
-  } catch (err) { status("vstatus", "Upload failed. Try again.", true); }
-  finally { $("vsend").disabled = false; }
-});
 </script>
 </body>
 </html>
