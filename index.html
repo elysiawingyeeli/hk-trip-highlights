@@ -187,7 +187,8 @@
 
   <section id="tab-photos" class="tab">
     <form class="panel" id="pform" autocomplete="off">
-      <label class="upload" id="pick"><b>＋</b><span id="pickText">Add a photo</span><input type="file" id="file" accept="image/*"></label>
+      <label class="upload" id="pick"><b>＋</b><span id="pickText">Add photos</span><input type="file" id="file" accept="image/*" multiple></label>
+      <p class="hint">Pick up to 50 photos at once — they'll all upload with the same name, activity and mood. A caption, if you add one, applies to all of them.</p>
       <img class="preview" id="preview" alt="">
       <label for="pname">Your name</label>
       <input id="pname" maxlength="40" placeholder="Elyse" required>
@@ -624,10 +625,16 @@ if (sb) {
 renderPhotos(); renderVideos(); route();
 
 /* ---- photo upload (shrinks big phone photos first) ---- */
-let picked = null;
+let picked = [];
 $("file").addEventListener("change", () => {
-  picked = $("file").files[0] || null;
-  if (picked) { $("preview").src = URL.createObjectURL(picked); $("preview").style.display = "block"; $("pickText").textContent = "Change photo"; }
+  const files = Array.from($("file").files || []);
+  picked = files.slice(0, 50);
+  if (picked.length) {
+    $("preview").src = URL.createObjectURL(picked[0]); $("preview").style.display = "block";
+    $("pickText").textContent = picked.length === 1 ? "Change photo" : picked.length + " photos picked — tap to change";
+    $("psend").textContent = picked.length === 1 ? "Upload photo" : "Upload " + picked.length + " photos";
+    if (files.length > 50) status("pstatus", "Picked the first 50 of " + files.length + " — upload in batches of 50.");
+  }
 });
 async function shrink(file) {
   try {
@@ -644,25 +651,34 @@ $("pform").addEventListener("submit", async e => {
   e.preventDefault();
   if (!sb) return status("pstatus", "Site isn't connected yet.", true);
   const name = $("pname").value.trim();
-  if (!picked) return status("pstatus", "Pick a photo first.", true);
+  if (!picked.length) return status("pstatus", "Pick a photo first.", true);
   if (!name) return status("pstatus", "Add your name.", true);
-  setName(name); $("psend").disabled = true; status("pstatus", "Uploading…");
+  const caption = $("caption").value.trim() || null;
+  const total = picked.length;
+  setName(name); $("psend").disabled = true;
+  let done = 0, failed = 0;
   try {
-    const small = await shrink(picked);
-    const body = small ? small.blob : picked;
-    const ext = small ? small.ext : ((picked.name.split(".").pop() || "jpg").toLowerCase());
-    const type = small ? small.type : picked.type;
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const up = await sb.storage.from(PHOTO_BUCKET).upload(path, body, { contentType: type, upsert: false });
-    if (up.error) throw up.error;
-    const { error } = await sb.from("photos").insert({ contributor: name, caption: $("caption").value.trim() || null, activity: formActivity, mood: formMood, path });
-    if (error) throw error;
-    picked = null; $("file").value = ""; $("caption").value = "";
-    $("preview").style.display = "none"; $("pickText").textContent = "Add a photo";
-    status("pstatus", "Uploaded — it's on the wall.");
+    for (const file of picked) {
+      status("pstatus", "Uploading " + (done + failed + 1) + " of " + total + "…");
+      try {
+        const small = await shrink(file);
+        const body = small ? small.blob : file;
+        const ext = small ? small.ext : ((file.name.split(".").pop() || "jpg").toLowerCase());
+        const type = small ? small.type : file.type;
+        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const up = await sb.storage.from(PHOTO_BUCKET).upload(path, body, { contentType: type, upsert: false });
+        if (up.error) throw up.error;
+        const { error } = await sb.from("photos").insert({ contributor: name, caption, activity: formActivity, mood: formMood, path });
+        if (error) throw error;
+        done++;
+      } catch (err) { failed++; }
+    }
+    picked = []; $("file").value = ""; $("caption").value = "";
+    $("preview").style.display = "none"; $("pickText").textContent = "Add photos"; $("psend").textContent = "Upload photo";
+    if (failed === 0) status("pstatus", done === 1 ? "Uploaded — it's on the wall." : "Uploaded " + done + " photos — they're on the wall.");
+    else status("pstatus", "Uploaded " + done + " of " + total + " — " + failed + " failed. Try those again.", true);
     loadPhotos();
-  } catch (err) { status("pstatus", "Upload failed. Try again.", true); }
-  finally { $("psend").disabled = false; }
+  } finally { $("psend").disabled = false; }
 });
 
 /* ---- video upload ---- */
