@@ -86,6 +86,12 @@
   .ghost{background:transparent;border:1px solid var(--line);color:#fff;padding:9px 16px;border-radius:2px;font:700 12px "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-decoration:none}
   .empty{text-align:center;color:var(--dim);padding:44px 20px;border:1px dashed var(--line);border-radius:4px;max-width:960px;margin:0 auto;line-height:1.6}
 
+  /* ---- one wall, grouped by activity ---- */
+  .group{margin:0 auto 26px;max-width:960px}
+  .group h3{font-family:"Archivo",sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:10px}
+  .group h3 span{color:var(--dim);font-family:"Space Mono",monospace;font-size:11px;font-weight:400;letter-spacing:.14em;margin-left:8px}
+  .grid .vcard{grid-column:span 2}
+
   /* ---- photo wall ---- */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;max-width:960px;margin:0 auto}
   .ph{position:relative;aspect-ratio:4/3;border-radius:4px;overflow:hidden;border:1px solid var(--line);cursor:pointer;background:var(--deep);animation:land .6s both}
@@ -140,7 +146,6 @@
   @keyframes fill{to{width:100%}}
   #ptvimg{max-width:100%;max-height:62vh;border-radius:4px;object-fit:contain}
   #ptvcap{font-family:"Archivo",sans-serif;font-weight:700;font-size:clamp(20px,5vw,32px);line-height:1.3;max-width:640px;margin-top:22px;word-wrap:break-word}
-  #ptvwho{margin-top:14px;font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim)}
   #ptvcount{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);left:0;right:0;font-size:10px;letter-spacing:.3em;color:var(--dim)}
   #ptvexit{position:fixed;top:calc(env(safe-area-inset-top,0px) + 26px);right:14px;z-index:12;display:none;font-size:16px;padding:6px 12px}
   body.pstory #ptvexit{display:block}
@@ -179,10 +184,6 @@
     <h1>Hong Kong Trip Highlights</h1>
     <p>Elyse · Chuck · Jen · Isa — <b>add your photos and videos as the trip unfolds.</b></p>
   </div>
-  <nav class="tabs">
-    <a href="#photos" data-t="photos">Photos</a>
-    <a href="#videos" data-t="videos">Videos</a>
-  </nav>
   <div class="setup" id="setup"></div>
 
   <form class="panel" id="uform" autocomplete="off">
@@ -204,27 +205,13 @@
     <div class="status" id="ustatus"></div>
   </form>
 
-  <section id="tab-photos" class="tab">
+  <section id="wall-section">
     <div class="filters" id="pfilters">
-      <div class="frow"><span class="flabel">Activity</span><div class="chips" id="f-pactivity"></div></div>
-      <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-pmood"></div></div>
-      <div class="frow"><span class="flabel">Person</span><div class="chips" id="f-pperson"></div></div>
+      <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-mood"></div></div>
     </div>
-    <div class="wallhead"><h2>Photos</h2><span id="pcount"></span><a class="ghost" href="#photostories">Play ✦</a></div>
-    <div class="grid" id="grid"></div>
-    <div class="empty" id="pempty">No photos yet — be the first to add one!</div>
-  </section>
-
-  <section id="tab-videos" class="tab">
-    <div class="filters" id="vfilters">
-      <div class="frow"><span class="flabel">Theme</span><div class="chips" id="f-vtheme"></div></div>
-      <div class="frow"><span class="flabel">Mood</span><div class="chips" id="f-vmood"></div></div>
-      <div class="frow"><span class="flabel">Activity</span><div class="chips" id="f-vactivity"></div></div>
-      <div class="frow"><span class="flabel">Person</span><div class="chips" id="f-vperson"></div></div>
-    </div>
-    <div class="wallhead"><h2>Videos</h2><span id="vcount"></span></div>
-    <div class="vgrid" id="vgrid"></div>
-    <div class="empty" id="vempty">No videos yet — be the first to add one!</div>
+    <div class="wallhead"><h2>Highlights</h2><span id="wcount"></span><a class="ghost" href="#photostories">Play ✦</a></div>
+    <div id="wall"></div>
+    <div class="empty" id="wempty">No photos or videos yet — be the first to add some!</div>
   </section>
 
   <footer><span>Hong Kong Trip Highlights · 24–29 Nov 2026</span></footer>
@@ -233,14 +220,12 @@
 <div class="lightbox" id="lightbox">
   <img id="lbimg" alt="">
   <p id="lbcap"></p>
-  <small id="lbwho"></small>
   <div class="lrow"><button class="like vlike" id="lblike"><span class="heart">♥</span><span class="n">0</span></button></div>
 </div>
 
 <div class="voverlay" id="voverlay">
   <video id="vovideo" controls playsinline></video>
   <p id="vocap"></p>
-  <small id="vowho"></small>
   <div class="lrow"><button class="like vlike" id="volike"><span class="heart">♥</span><span class="n">0</span></button></div>
 </div>
 <a class="ghost x" id="lbclose" href="#" aria-label="Close" style="display:none">✕</a>
@@ -250,7 +235,7 @@
   <button class="tap l" id="pprev" aria-label="Previous"></button>
   <button class="tap r" id="pnext" aria-label="Next"></button>
   <img id="ptvimg" alt="">
-  <div id="ptvcap">No photos yet.</div><div id="ptvwho"></div><div id="ptvcount"></div>
+  <div id="ptvcap">No photos yet.</div><div id="ptvcount"></div>
 </div>
 <a class="ghost" id="ptvexit" href="#" aria-label="Close">✕</a>
 
@@ -271,8 +256,8 @@ let likeCounts = {};            // "photo:12" -> n
 let liked = new Set();          // local "photo:12" keys this browser has liked
 try { liked = new Set(JSON.parse(localStorage.getItem("hk-liked") || "[]")); } catch (e) {}
 
-/* filters: one shared set, applied per tab (theme only affects videos) */
-const filters = { activity: "All", mood: "All", theme: "All", person: "All" };
+/* filters: mood only — the wall is grouped by activity */
+const filters = { mood: "All" };
 let formActivity = ACTIVITIES[0], formMood = MOODS[0], formTheme = THEMES[0];
 
 /* ---- drifting light motes over the ridges: slow, faint, forest-firefly feel ---- */
@@ -338,14 +323,7 @@ function buildPickChips(box, values, current, onPick, extraClass) {
   });
 }
 function refreshFilterChips() {
-  buildChips($("f-pactivity"), ACTIVITIES, filters.activity, v => { filters.activity = v; refreshFilterChips(); renderPhotos(); });
-  buildChips($("f-pmood"), MOODS, filters.mood, v => { filters.mood = v; refreshFilterChips(); renderPhotos(); });
-  buildChips($("f-vtheme"), THEMES, filters.theme, v => { filters.theme = v; refreshFilterChips(); renderVideos(); }, "theme");
-  buildChips($("f-vmood"), MOODS, filters.mood, v => { filters.mood = v; refreshFilterChips(); renderVideos(); });
-  buildChips($("f-vactivity"), ACTIVITIES, filters.activity, v => { filters.activity = v; refreshFilterChips(); renderVideos(); });
-  const people = [...new Set([...photos.map(p => p.contributor), ...videos.map(v => v.contributor)].filter(Boolean))].sort();
-  buildChips($("f-pperson"), people, filters.person, v => { filters.person = v; refreshFilterChips(); renderPhotos(); renderVideos(); });
-  buildChips($("f-vperson"), people, filters.person, v => { filters.person = v; refreshFilterChips(); renderPhotos(); renderVideos(); });
+  buildChips($("f-mood"), MOODS, filters.mood, v => { filters.mood = v; refreshFilterChips(); renderWall(); });
 }
 function refreshFormChips() {
   buildPickChips($("uactivity"), ACTIVITIES, formActivity, v => { formActivity = v; refreshFormChips(); });
@@ -362,9 +340,6 @@ function route() {
   document.body.classList.toggle("pstory", h === "photostories");
   if (h === "photostories") { if (!wasPStory) startPhotoStory(); return; }
   stopPhotoStory();
-  const t = h === "videos" ? "videos" : "photos";
-  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x.id === "tab-" + t));
-  document.querySelectorAll(".tabs a").forEach(x => x.classList.toggle("on", x.dataset.t === t));
 }
 addEventListener("hashchange", route);
 
@@ -396,89 +371,93 @@ function likeButton(type, id) {
   b.onclick = e => { e.stopPropagation(); toggleLike(type, id, b); };
   return b;
 }
-function visiblePhotos() {
-  return photos.filter(p =>
-    (filters.activity === "All" || p.activity === filters.activity) &&
-    (filters.mood === "All" || p.mood === filters.mood) &&
-    (filters.person === "All" || p.contributor === filters.person));
-}
-function visibleVideos() {
-  return videos.filter(v =>
-    (filters.theme === "All" || v.theme === filters.theme) &&
-    (filters.mood === "All" || v.mood === filters.mood) &&
-    (filters.activity === "All" || v.activity === filters.activity) &&
-    (filters.person === "All" || v.contributor === filters.person));
+function visibleItems() {
+  const mood = filters.mood;
+  const items = [
+    ...photos.filter(p => mood === "All" || p.mood === mood).map(p => ({ kind: "photo", item: p })),
+    ...videos.filter(v => mood === "All" || v.mood === mood).map(v => ({ kind: "video", item: v }))
+  ];
+  items.sort((a, b) => (b.item.created_at || "").localeCompare(a.item.created_at || ""));
+  return items;
 }
 
-/* ---- render: photos ---- */
-function renderPhotos() {
-  const list = visiblePhotos();
-  const g = $("grid"); g.innerHTML = "";
-  $("pempty").style.display = list.length ? "none" : "block";
-  $("pempty").textContent = photos.length
-    ? "Nothing matches those filters — try clearing one."
-    : "No photos yet — be the first to add one!";
-  $("pcount").textContent = photos.length ? photos.length + (photos.length === 1 ? " photo" : " photos") : "";
-  list.forEach(p => {
-    const d = document.createElement("div");
-    d.className = "ph";
-    const im = document.createElement("img");
-    im.loading = "lazy"; im.src = p.url; im.alt = p.caption || "";
-    const tags = document.createElement("div");
-    tags.className = "tags";
-    [p.activity, p.mood].filter(Boolean).forEach(t => {
-      const s = document.createElement("span"); s.textContent = t; tags.append(s);
-    });
+/* ---- render: one wall, photos & videos mixed, grouped by activity ---- */
+function photoTile(p) {
+  const d = document.createElement("div");
+  d.className = "ph";
+  const im = document.createElement("img");
+  im.loading = "lazy"; im.src = p.url; im.alt = p.caption || "";
+  const tags = document.createElement("div");
+  tags.className = "tags";
+  [p.mood].filter(Boolean).forEach(t => {
+    const s = document.createElement("span"); s.textContent = t; tags.append(s);
+  });
+  const like = likeButton("photo", p.id);
+  if (p.caption) {
     const cap = document.createElement("div");
     cap.className = "cap";
-    const b = document.createElement("b"); b.textContent = p.contributor;
-    const s = document.createElement("small"); s.textContent = p.caption || "No caption.";
-    cap.append(b, s);
-    const like = likeButton("photo", p.id);
+    const s = document.createElement("small"); s.textContent = p.caption;
+    cap.append(s);
     d.append(im, tags, cap, like);
-    d.onclick = () => openLightbox(p);
-    g.append(d);
+  } else {
+    d.append(im, tags, like);
+  }
+  d.onclick = () => openLightbox(p);
+  return d;
+}
+function renderWall() {
+  const wall = $("wall"); wall.innerHTML = "";
+  const items = visibleItems();
+  const total = photos.length + videos.length;
+  $("wempty").style.display = items.length ? "none" : "block";
+  $("wempty").textContent = total
+    ? "Nothing matches that mood — try clearing it."
+    : "No photos or videos yet — be the first to add some!";
+  $("wcount").textContent = total ? total + (total === 1 ? " highlight" : " highlights") : "";
+  ACTIVITIES.forEach(act => {
+    const group = items.filter(x => (x.item.activity || ACTIVITIES[0]) === act);
+    if (!group.length) return;
+    const sec = document.createElement("div");
+    sec.className = "group";
+    const h = document.createElement("h3");
+    h.textContent = act;
+    const n = document.createElement("span");
+    n.textContent = group.length + (group.length === 1 ? " item" : " items");
+    h.append(n);
+    const g = document.createElement("div");
+    g.className = "grid";
+    group.forEach(x => g.append(x.kind === "photo" ? photoTile(x.item) : videoCard(x.item)));
+    sec.append(h, g);
+    wall.append(sec);
   });
 }
 
-/* ---- render: videos ---- */
-function renderVideos() {
-  const list = visibleVideos();
-  const g = $("vgrid"); g.innerHTML = "";
-  $("vempty").style.display = list.length ? "none" : "block";
-  $("vempty").textContent = videos.length
-    ? "Nothing matches those filters — try clearing one."
-    : "No videos yet — be the first to add one!";
-  $("vcount").textContent = videos.length ? videos.length + (videos.length === 1 ? " video" : " videos") : "";
-  list.forEach(v => {
-    const card = document.createElement("div");
-    card.className = "vcard";
-    const vid = document.createElement("video");
-    vid.controls = true; vid.playsInline = true; vid.preload = "metadata";
-    vid.src = v.url;
-    const bd = document.createElement("div");
-    bd.className = "vbody";
-    const cap = document.createElement("div");
-    cap.className = "vcap"; cap.textContent = v.caption || "No caption.";
-    const meta = document.createElement("div");
-    meta.className = "vmeta"; meta.textContent = v.contributor;
-    const row = document.createElement("div");
-    row.className = "vrow";
-    const tags = document.createElement("div");
-    tags.className = "vtags";
-    [v.theme, v.mood, v.activity].filter(Boolean).forEach(t => {
-      const s = document.createElement("span"); s.textContent = t; tags.append(s);
-    });
-    const like = likeButton("video", v.id);
-    like.classList.add("vlike");
-    const big = document.createElement("button");
-    big.className = "ghost"; big.type = "button"; big.textContent = "Watch big";
-    big.onclick = () => openVideo(v);
-    row.append(tags, like);
-    bd.append(cap, meta, row, big);
-    card.append(vid, bd);
-    g.append(card);
+function videoCard(v) {
+  const card = document.createElement("div");
+  card.className = "vcard";
+  const vid = document.createElement("video");
+  vid.controls = true; vid.playsInline = true; vid.preload = "metadata";
+  vid.src = v.url;
+  const bd = document.createElement("div");
+  bd.className = "vbody";
+  const cap = document.createElement("div");
+  cap.className = "vcap"; cap.textContent = v.caption || "No caption.";
+  const row = document.createElement("div");
+  row.className = "vrow";
+  const tags = document.createElement("div");
+  tags.className = "vtags";
+  [v.theme, v.mood].filter(Boolean).forEach(t => {
+    const s = document.createElement("span"); s.textContent = t; tags.append(s);
   });
+  const like = likeButton("video", v.id);
+  like.classList.add("vlike");
+  const big = document.createElement("button");
+  big.className = "ghost"; big.type = "button"; big.textContent = "Watch big";
+  big.onclick = () => openVideo(v);
+  row.append(tags, like);
+  bd.append(cap, row, big);
+  card.append(vid, bd);
+  return card;
 }
 
 /* ---- photo lightbox ---- */
@@ -487,7 +466,6 @@ function openLightbox(p) {
   lbPhoto = p;
   $("lbimg").src = p.url;
   $("lbcap").textContent = p.caption || "";
-  $("lbwho").textContent = p.contributor + (p.activity ? " · " + p.activity : "") + (p.mood ? " · " + p.mood : "");
   paintLikeBtn($("lblike"), "photo", p.id);
   $("lblike").onclick = () => toggleLike("photo", p.id, $("lblike"));
   $("lightbox").classList.add("on");
@@ -508,7 +486,6 @@ function openVideo(v) {
   const el = $("vovideo");
   el.src = v.url;
   $("vocap").textContent = v.caption || "";
-  $("vowho").textContent = v.contributor + (v.theme ? " · " + v.theme : "") + (v.mood ? " · " + v.mood : "");
   paintLikeBtn($("volike"), "video", v.id);
   $("volike").onclick = () => toggleLike("video", v.id, $("volike"));
   $("voverlay").classList.add("on");
@@ -532,7 +509,7 @@ function showPhotoStory() {
   if (!pstory.length) {
     $("ptvimg").style.display = "none";
     $("ptvcap").textContent = "No photos yet — be the first to upload one.";
-    $("ptvwho").textContent = ""; $("pbars").innerHTML = ""; $("ptvcount").textContent = "";
+    $("pbars").innerHTML = ""; $("ptvcount").textContent = "";
     ptimer = setTimeout(showPhotoStory, 5000); return;
   }
   if (pstory.length !== photos.length) {
@@ -546,7 +523,6 @@ function showPhotoStory() {
   const im = $("ptvimg");
   im.style.display = "block"; im.src = p.url; im.alt = p.caption || "";
   $("ptvcap").textContent = p.caption || "";
-  $("ptvwho").textContent = p.contributor;
   $("ptvcount").textContent = `${psi + 1} / ${pstory.length}`;
   ptimer = setTimeout(() => { psi++; showPhotoStory(); }, 7000);
 }
@@ -575,14 +551,14 @@ async function loadPhotos() {
   const { data, error } = await sb.from("photos").select("id,contributor,caption,activity,mood,path,created_at").order("created_at", { ascending: false }).limit(300);
   if (!error) {
     photos = data.map(p => ({ ...p, url: sb.storage.from(PHOTO_BUCKET).getPublicUrl(p.path).data.publicUrl }));
-    refreshFilterChips(); renderPhotos();
+    refreshFilterChips(); renderWall();
   }
 }
 async function loadVideos() {
   const { data, error } = await sb.from("videos").select("id,contributor,caption,theme,mood,activity,path,created_at").order("created_at", { ascending: false }).limit(200);
   if (!error) {
     videos = data.map(v => ({ ...v, url: sb.storage.from(VIDEO_BUCKET).getPublicUrl(v.path).data.publicUrl }));
-    refreshFilterChips(); renderVideos();
+    refreshFilterChips(); renderWall();
   }
 }
 async function loadLikes() {
@@ -590,7 +566,7 @@ async function loadLikes() {
   if (!error) {
     likeCounts = {};
     data.forEach(l => { const k = likeKey(l.item_type, l.item_id); likeCounts[k] = (likeCounts[k] || 0) + 1; });
-    renderPhotos(); renderVideos();
+    renderWall();
     if (lbPhoto) paintLikeBtn($("lblike"), "photo", lbPhoto.id);
     if (voVideo) paintLikeBtn($("volike"), "video", voVideo.id);
   }
@@ -606,7 +582,7 @@ if (sb) {
   setInterval(() => { if (!document.hidden) { loadPhotos(); loadVideos(); } }, 30000); // backup if live updates drop
 }
 
-renderPhotos(); renderVideos(); route();
+renderWall(); route();
 
 /* ---- unified upload: up to 50 photos & videos, mixed (shrinks big phone photos first) ---- */
 let picked = [];
